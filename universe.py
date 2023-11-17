@@ -92,11 +92,15 @@ while running:
             if event.button == 1:
                 if pz.dragStart.x == drag_track.x and pz.dragStart.y == drag_track.y:
                     if star_to_be_selected != None:
+
                         selected_star = star_to_be_selected
                         star_to_be_selected = None
-                        print(NameGenerator.generate(3, selected_star))
+                        
+                        print(NameGenerator.generate(selected_star.randInt(2,3), selected_star))
+                        draw()
+                        selected_star.drawSys(SCREEN, pygame)
+                        pygame.display.flip()
 
-                        #selected_star.drawSystem()
                     else:
                         selected_star = None
                         draw()
@@ -113,7 +117,7 @@ while running:
             SCREEN = pygame.display.set_mode((width, height), pygame.RESIZABLE)
             draw()
     
-    clock.tick(24)  # Limit to 24 FPS
+    clock.tick(30)  # Limit to 30 FPS
 
 # Quit Pygame
 pygame.quit()

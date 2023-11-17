@@ -30,7 +30,7 @@ class Star:
            return
         
         # Generate star infos:
-        self.name = NameGenerator.generate(self.state, self.randInt(2, 4))
+        self.name = NameGenerator.generate(self.state, self)
         self.mass = self.randFloat(0.1, 10)
         self.radius = self.diameter * 300000
         self.temperature = self.randFloat(0.1, 10)
@@ -41,8 +41,8 @@ class Star:
         self.planets = []
 
         # Generate a random number of planets:
-        for i in range(self.randInt(1, 5)):
-            self.planets.append(Planet(self.x, self.y, i))
+        #for i in range(self.randInt(1, 5)):
+        #    self.planets.append(Planet(self.x, self.y, i))
         
 
 
@@ -79,6 +79,39 @@ class Star:
             return True
         
         return False
+    
+    def drawSys(
+        self,
+        screen: pygame.Surface,
+        pygame: pygame,
+    ):
+        # Define side menu parameters
+        menu_width = screen.get_width() * 1 / 6 + 100
+        menu_height = screen.get_height() - 40
+        menu_rect = pygame.Rect(20, 20, menu_width, menu_height)
+        menu_border_radius = 20
+        menu_background_color = (0, 0, 139)  # Dark Blue
+
+        # Draw side menu background
+        pygame.draw.rect(screen, menu_background_color, menu_rect, border_radius=menu_border_radius)
+
+        # Draw star representation at the top of the side menu
+        star_diameter = int(self.diameter * 30)
+        star_radius = star_diameter // 2
+
+        # Calculate the position of the semicircle (star) at the top, centered horizontally
+        star_x = menu_rect.centerx
+        star_y = menu_rect.y + star_radius + 10  # 10 pixels padding from the top
+
+        # Draw the semicircle representing the star
+        pygame.draw.circle(
+            screen, self.color, (star_x, star_y), star_radius
+        )
+        pygame.draw.arc(
+            screen, (255, 255, 255), pygame.Rect(star_x - star_radius, star_y - star_radius, star_diameter, star_diameter),
+            0, 180, width=2
+        )
+        
 
     def randInt(self, a, b):
         self.state ^= (self.state << 13) & 0xFFFFFFFF
