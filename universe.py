@@ -19,8 +19,8 @@ mouse_x, mouse_y = 0, 0
 
 CELL_SIZE = 40
 
-star_to_be_selected = None
-selected_star = None
+star_to_be_selected : Star = None
+selected_star : Star = None
 
 def draw():
     draw_width = int(pz.ScreenToWorldX(width) / CELL_SIZE + CELL_SIZE)
@@ -49,6 +49,8 @@ def draw():
     else:
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                     
+    if selected_star != None:
+        selected_star.drawSys(SCREEN, pygame, mouse_x, mouse_y)
 
     # Update display
     pygame.display.flip()
@@ -90,17 +92,14 @@ while running:
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
+                # Click event:
                 if pz.dragStart.x == drag_track.x and pz.dragStart.y == drag_track.y:
                     if star_to_be_selected != None:
 
-                        selected_star = star_to_be_selected
+                        selected_star = Star(star_to_be_selected.x, star_to_be_selected.y, True)
                         star_to_be_selected = None
                         
-                        print(NameGenerator.generate(selected_star.randInt(2,3), selected_star))
                         draw()
-                        selected_star.drawSys(SCREEN, pygame)
-                        pygame.display.flip()
-
                     else:
                         selected_star = None
                         draw()
@@ -117,7 +116,7 @@ while running:
             SCREEN = pygame.display.set_mode((width, height), pygame.RESIZABLE)
             draw()
     
-    clock.tick(30)  # Limit to 30 FPS
+    clock.tick(60)  # Limit to 30 FPS
 
 # Quit Pygame
 pygame.quit()
