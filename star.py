@@ -2,6 +2,7 @@ import pygame
 import panzoom as pz
 from name_generator import NameGenerator
 import locale
+from planet import Planet
 
 class Star:
 
@@ -36,14 +37,19 @@ class Star:
         self.radius = self.diameter * 300000
         self.temperature = self.randInt(2000, 50000)
         self.luminosity = self.randFloat(0.1, 10)
-        self.age = self.randFloat(0.1, 12)
+        self.age = self.randFloat(5, 12)
+        
+        if self.randFloat(0, 1) < 0.1:
+            self.age = self.randFloat(0.1, 5)
 
         # Generate a system:
         self.planets = []
 
         # Generate a random number of planets:
-        # for i in range(self.randInt(1, 5)):
-        #    self.planets.append(Planet(self.x, self.y, i))
+        for i in range(self.randInt(1, 5)):
+           self.planets.append(Planet(self.randInt, self.randFloat, i, self))
+           if i > 0:
+               self.planets[i].distance = self.planets[i-1].distance + self.planets[i].radius * 3 * 2 + self.randInt(20, 50)
 
     def draw(
         self,
@@ -82,7 +88,7 @@ class Star:
         return False
 
     def hovering_star_on_sys(self, mouse_x, mouse_y, star_x, star_y, star_radius):
-        return (mouse_x - star_x)**2 + (mouse_y - star_y)**2 <= star_radius**2 and mouse_y > star_y
+        return (mouse_x - star_x)**2 + (mouse_y - star_y)**2 <= star_radius**2 and mouse_y >= star_y
 
     def draw_infos(self, mouse_x, mouse_y, screen, pygame, menu_border_radius, menu_background_color):
         mouse_x += 40
@@ -155,7 +161,7 @@ class Star:
                          menu_rect, border_radius=menu_border_radius)
 
         # Draw star representation at the top of the side menu
-        star_diameter = int(self.diameter * 50)
+        star_diameter = int(self.diameter * 60)
         star_radius = star_diameter // 2
 
         # Calculate the position of the semicircle (star) at the top, centered horizontally
@@ -173,6 +179,10 @@ class Star:
             draw_bottom_right=True,
             draw_bottom_left=True
         )
+        
+        # Draw planets from last to first:
+        for i in range(len(self.planets) - 1, -1, -1):
+            self.planets[i].draw(screen, pygame, mouse_x, mouse_y, menu_rect, menu_border_radius, menu_background_color)
 
         if self.hovering_star_on_sys(mouse_x, mouse_y, star_x, star_y, star_radius):
             pygame.draw.circle(
@@ -187,6 +197,7 @@ class Star:
 
             self.draw_infos(mouse_x, mouse_y, screen, pygame,
                             menu_border_radius, menu_background_color)
+        
 
     def randInt(self, a, b):
         self.state ^= (self.state << 13) & 0xFFFFFFFF

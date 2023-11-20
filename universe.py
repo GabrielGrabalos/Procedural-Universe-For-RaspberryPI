@@ -2,7 +2,6 @@ import pygame
 import sys
 import panzoom
 from star import Star
-from name_generator import NameGenerator
 
 pz = panzoom.PanZoom()
 
@@ -116,7 +115,7 @@ while running:
             SCREEN = pygame.display.set_mode((width, height), pygame.RESIZABLE)
             draw()
     
-    clock.tick(60)  # Limit to 30 FPS
+    clock.tick(60)  # Limit to 60 FPS
 
 # Quit Pygame
 pygame.quit()
